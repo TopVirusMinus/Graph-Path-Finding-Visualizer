@@ -1,0 +1,55 @@
+html,
+body {
+  background-color: #333;
+  overflow: hidden;
+  color: #eee;
+  font-family: monospace;
+}
+
+p {
+  font-size: 1.3em;
+  text-align: left;
+}
+
+#mynetwork {
+  width: 100vw;
+  height: 80vh;
+  border-top: 1px solid lightgray;
+}
+
+/* .settings {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: 0 auto;
+} */
+
+.left {
+  width: 20%;
+  padding: 0 0 2rem 5rem;
+  /* border: 1px solid red; */
+}
+
+.right {
+  width: 50%;
+  /* border: 1px solid wheat; */
+  text-align: center;
+}
+
+.settings {
+  /* border: 1px solid greenyellow; */
+  display: flex;
+}
+
+code {
+  background-color: rgb(124, 205, 124);
+  color: #272822;
+  border-radius: 0.3rem;
+  padding: 4px 5px 5px;
+  white-space: nowrap;
+}
+
+.instructions {
+  margin: 0 auto;
+  width: fit-content;
+}

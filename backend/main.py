@@ -2,6 +2,7 @@ from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from collections import defaultdict
 
 app = FastAPI()
 
@@ -23,7 +24,7 @@ app.add_middleware(
 
 nodes = {}
 edges = {}
-
+graph = defaultdict(list)
 
 @app.get("/", tags=["root"])
 async def read_root() -> dict:
@@ -41,4 +42,9 @@ async def receiveInfo(baseParam: BaseParam):
 
     nodes = res.nodes
     edges = res.edges
-    print(res)
+    for edge in edges:
+      graph[edge["from"]].append(edge["to"])
+      graph[edge["to"]].append(edge["from"])
+
+    print(graph)
+

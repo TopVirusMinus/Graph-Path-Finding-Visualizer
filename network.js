@@ -10,10 +10,10 @@ var nodes = new vis.DataSet([
 // create an array with edges
 var edges = new vis.DataSet([
   { from: 1, to: 2, label: "2" },
-  { from: 1, to: 3, label: "5" },
+  { from: 1, to: 3, label: "4" },
   { from: 2, to: 3, label: "3" },
-  { from: 2, to: 4, label: "1" },
-  { from: 3, to: 4, label: "3" },
+  { from: 2, to: 4, label: "4" },
+  { from: 3, to: 4, label: "9" },
   { from: 4, to: 5, label: "2" },
 ]);
 
@@ -235,6 +235,14 @@ instructions = {
   },
   Control: () => {
     network.body.data.edges.add({ from: selectednode, to: hoveredNode });
+  },
+  h: () => {
+    let heuristic = prompt("Enter Heuristic");
+    nodes.updateOnly({ id: selectednode, title: heuristic });
+  },
+  H: () => {
+    let heuristic = prompt("Enter Heuristic");
+    nodes.updateOnly({ id: selectednode, title: heuristic });
   },
 };
 

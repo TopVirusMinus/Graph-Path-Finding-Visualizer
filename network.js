@@ -19,7 +19,7 @@ var edges = new vis.DataSet([
 
 var selectednode = 0;
 var lastNodeNum = 3;
-
+let hoveredNode = "";
 // create a network
 var container = document.getElementById("mynetwork");
 var data = {
@@ -217,21 +217,37 @@ network.on("zoom", function (params) {
 //     );
 // });
 
-container.addEventListener("keydown", (e) => {
-  if (e.key === "Delete") {
-    network.deleteSelected();
-  } else if (e.key === "Enter") {
+instructions = {
+  Delete: () => network.deleteSelected(),
+  Enter: () => {
+    !selectededge && "";
     let cost = prompt("Enter Cost");
     edges.updateOnly({ id: selectededge, label: cost, title: heu });
     console.log(`edit edge cost ${selectededge}`);
-  }
+  },
+  r: () => {
+    let newName = prompt("Enter New Name");
+    nodes.updateOnly({ id: selectednode, label: newName, title: heu });
+  },
+  R: () => {
+    let newName = prompt("Enter New Name");
+    nodes.updateOnly({ id: selectednode, label: newName, title: heu });
+  },
+  Control: () => {
+    network.body.data.edges.add({ from: selectednode, to: hoveredNode });
+  },
+};
+
+container.addEventListener("keydown", (e) => {
+  console.log(e.key);
+  instructions[e.key]();
 });
 
 network.on("hidePopup", function () {
   //console.log("hidePopup Event");
 });
 network.on("select", function (params) {
-  //console.log("select Event:", params);
+  //console.log("select Event:", params);1
 });
 network.on("selectNode", function (params) {
   selectednode = params.nodes[0];
@@ -250,6 +266,8 @@ network.on("deselectEdge", function (params) {
 });
 network.on("hoverNode", function (params) {
   //console.log("hoverNode Event:", params);
+  hoveredNode = params.node;
+  console.log(hoveredNode);
 });
 network.on("hoverEdge", function (params) {
   //console.log("hoverEdge Event:", params);

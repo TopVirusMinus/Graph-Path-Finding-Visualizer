@@ -10,16 +10,29 @@ var nodes = new vis.DataSet([
 // create an array with edges
 var edges = new vis.DataSet([
   { from: 1, to: 2, label: "2" },
-  { from: 1, to: 3, label: "4" },
+  { from: 1, to: 3, label: "5" },
   { from: 2, to: 3, label: "3" },
   { from: 2, to: 4, label: "4" },
   { from: 3, to: 4, label: "9" },
   { from: 4, to: 5, label: "2" },
 ]);
 
-var selectednode = 0;
+let clear = document
+  .getElementById("clear")
+  .addEventListener("click", () => {});
+
+var selectedNode = 0;
+var prevSelectedNode = 0;
+
+var source = -1;
+var destination = -1;
+
 var lastNodeNum = 3;
 let hoveredNode = "";
+let algorithm = "bfs";
+document.getElementById("Algorithm").addEventListener("change", () => {
+  algorithm = document.getElementById("Algorithm").value;
+});
 // create a network
 var container = document.getElementById("mynetwork");
 var data = {
@@ -54,8 +67,15 @@ document.getElementById("visualize").addEventListener("click", async () => {
     .post("http://localhost:8000/receiveInfo/", {
       nodes: nodes.get(),
       edges: edges.get(),
+      algorithm,
+      source,
+      destination,
     })
     .then((res) => console.log(res))
+    .then(async () => {
+      let path = await axios.get("http://localhost:8000/computePath/");
+      console.log(path.data);
+    })
     .catch((err) => console.log(err));
 });
 
@@ -77,7 +97,7 @@ network.on("click", function (params) {
   console.log(
     "click event, getNodeAt returns: " + this.getNodeAt(params.pointer.DOM)
   );
-  selectednode = this.getNodeAt(params.pointer.DOM);
+  selectedNode = this.getNodeAt(params.pointer.DOM);
   if (ct % 2 == 0) {
     startnode = this.getNodeAt(params.pointer.DOM);
   } else {
@@ -159,7 +179,7 @@ function updatenode() {
   var txt = document.getElementById("nname").value;
   var heu = document.getElementById("heu").value;
   console.log(heu);
-  nodes.updateOnly({ id: selectednode, label: txt, title: heu });
+  nodes.updateOnly({ id: selectedNode, label: txt, title: heu });
 }
 
 network.on("dragEnd", function (params) {
@@ -227,22 +247,92 @@ instructions = {
   },
   r: () => {
     let newName = prompt("Enter New Name");
-    nodes.updateOnly({ id: selectednode, label: newName, title: heu });
+    nodes.updateOnly({ id: selectedNode, label: newName, title: heu });
   },
   R: () => {
     let newName = prompt("Enter New Name");
-    nodes.updateOnly({ id: selectednode, label: newName, title: heu });
+    nodes.updateOnly({ id: selectedNode, label: newName, title: heu });
   },
   Control: () => {
-    network.body.data.edges.add({ from: selectednode, to: hoveredNode });
+    network.body.data.edges.add({ from: selectedNode, to: hoveredNode });
   },
   h: () => {
     let heuristic = prompt("Enter Heuristic");
-    nodes.updateOnly({ id: selectednode, title: heuristic });
+    nodes.updateOnly({ id: selectedNode, title: heuristic });
   },
   H: () => {
     let heuristic = prompt("Enter Heuristic");
-    nodes.updateOnly({ id: selectednode, title: heuristic });
+    nodes.updateOnly({ id: selectedNode, title: heuristic });
+  },
+  s: () => {
+    source = selectedNode;
+    console.log(source);
+    nodes.forEach((n) => {
+      if ("color" in n && n.color.background === "#00ff00") {
+        nodes.updateOnly({
+          id: n.id,
+          color: { background: "#97c2fc" },
+          font: { color: "#333" },
+        });
+      }
+    });
+    nodes.updateOnly({
+      id: selectedNode,
+      color: { background: "#00ff00" },
+      font: { color: "#333" },
+    });
+  },
+  S: () => {
+    source = selectedNode;
+    nodes.forEach((n) => {
+      if ("color" in n && n.color.background === "#00ff00") {
+        nodes.updateOnly({
+          id: n.id,
+          color: { background: "#97c2fc" },
+          font: { color: "#333" },
+        });
+      }
+    });
+    nodes.updateOnly({
+      id: selectedNode,
+      color: { background: "#00ff00" },
+      font: { color: "#333" },
+    });
+  },
+  d: () => {
+    destination = selectedNode;
+    console.log(destination);
+    nodes.forEach((n) => {
+      if ("color" in n && n.color.background === "#FF0000") {
+        nodes.updateOnly({
+          id: n.id,
+          color: { background: "#97c2fc" },
+          font: { color: "#333" },
+        });
+      }
+    });
+    nodes.updateOnly({
+      id: selectedNode,
+      color: { background: "#FF0000" },
+      font: { color: "#333" },
+    });
+  },
+  D: () => {
+    destination = selectedNode;
+    nodes.forEach((n) => {
+      if ("color" in n && n.color.background === "#FF0000") {
+        nodes.updateOnly({
+          id: n.id,
+          color: { background: "#97c2fc" },
+          font: { color: "#333" },
+        });
+      }
+    });
+    nodes.updateOnly({
+      id: selectedNode,
+      color: { background: "#FF0000" },
+      font: { color: "#333" },
+    });
   },
 };
 
@@ -258,9 +348,10 @@ network.on("select", function (params) {
   //console.log("select Event:", params);1
 });
 network.on("selectNode", function (params) {
-  selectednode = params.nodes[0];
-  console.log(selectednode);
-  var node = network.body.nodes[selectednode];
+  prevSelectedNode = selectedNode;
+  selectedNode = params.nodes[0];
+  prevSelectedNode === 0 ? (prevSelectedNode = selectedNode) : prevSelectedNode;
+  console.log(prevSelectedNode, selectedNode);
 });
 network.on("selectEdge", function (params) {
   console.log("selectEdge Event:", params);
@@ -275,7 +366,7 @@ network.on("deselectEdge", function (params) {
 network.on("hoverNode", function (params) {
   //console.log("hoverNode Event:", params);
   hoveredNode = params.node;
-  console.log(hoveredNode);
+  //console.log(hoveredNode);
 });
 network.on("hoverEdge", function (params) {
   //console.log("hoverEdge Event:", params);

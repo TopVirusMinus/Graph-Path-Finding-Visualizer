@@ -25,26 +25,96 @@ app.add_middleware(
 nodes = {}
 edges = {}
 graph = defaultdict(list)
+algorithm = "bfs"
+source = -1
+destination = -1
+
+def bfs():
+    global source, destination
+    queue = []
+    backtrack = {}
+    old_destination = destination
+    
+    print(source, destination)
+    queue.append(source)
+    
+    visited = set()
+    shortest_path = []
+    while(queue):
+        for _ in range(len(queue)):
+            curr = queue.pop(0)
+            visited.add(curr)
+            for c in graph[curr]:
+                backtrack[c] = curr
+                if c == destination:
+                    visited.add(c)
+                    while backtrack[destination] != source:
+                        destination = backtrack[destination]
+                        shortest_path.append(destination)
+                        shortest_path = shortest_path[::-1]
+                        
+                    shortest_path.insert(0, source)
+                    shortest_path.append(old_destination)
+                    print(shortest_path, visited)
+                    return shortest_path, visited
+                
+                if c not in visited:
+                    queue.insert(0,c)
+            
+    return {"msg":"bfs algorithm"}
+
+def dfs():
+    return {"msg":"dfs algorithm"}
+
+def uniform_cost():
+    return {"msg":"uniform cost algorithm"}
+
+def best_first():
+    return {"msg":"best first algorithm"}
+
+def a_star():
+    return {"msg":"A* algorithm"}
+
+algorithms = {"bfs": bfs, "dfs":dfs, "uniformCost":uniform_cost, "best_first":best_first, "A*":a_star}
 
 @app.get("/", tags=["root"])
 async def read_root() -> dict:
     return {"message": "Graph Path Finding Visualizer"}
 
+@app.get("/computePath")
+async def computePath():
+    return algorithms[algorithm]()
+
 
 class BaseParam(BaseModel):
     nodes: List[dict]
     edges: List[dict]
+    algorithm: str
+    source: int
+    destination: int
 
 
 @app.post("/receiveInfo/", status_code=201)
 async def receiveInfo(baseParam: BaseParam):
+    global nodes, edges, graph, algorithm, source, destination
+    nodes = {}
+    edges = {}
+    graph = defaultdict(list)
+    algorithm = "bfs"
+    source = -1
+    destination = -1
+    
     res = baseParam
-
     nodes = res.nodes
     edges = res.edges
+    algorithm = res.algorithm
+    source = res.source
+    destination = res.destination
+    
     for edge in edges:
       graph[edge["from"]].append(edge["to"])
-      graph[edge["to"]].append(edge["from"])
 
+    print(algorithm)
     print(graph)
+    print(source, destination)
 

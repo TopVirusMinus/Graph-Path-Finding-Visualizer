@@ -40,7 +40,7 @@ var selectedNode = 0;
 var prevSelectedNode = 0;
 
 var source = -1;
-var destination = -1;
+var destination = [];
 
 var lastNodeNum = 5;
 let hoveredNode = "";
@@ -329,39 +329,48 @@ instructions = {
     });
   },
   d: () => {
-    destination = selectedNode;
     console.log(destination);
-    nodes.forEach((n) => {
-      if ("color" in n && n.color.background === "#FF0000") {
-        nodes.updateOnly({
-          id: n.id,
-          color: { background: "#97c2fc" },
-          font: { color: "#333" },
-        });
-      }
-    });
-    nodes.updateOnly({
-      id: selectedNode,
-      color: { background: "#FF0000" },
-      font: { color: "#333" },
-    });
+    let same = false;
+    if (destination.includes(selectedNode)) {
+      console.log(same);
+      nodes.updateOnly({
+        id: selectedNode,
+        color: { background: "#97c2fc" },
+        font: { color: "#333" },
+      });
+      same = true;
+      destination.pop(destination.indexOf(selectedNode));
+    }
+    if (!same) {
+      destination.push(selectedNode);
+      nodes.updateOnly({
+        id: selectedNode,
+        color: { background: "#FF0000" },
+        font: { color: "#333" },
+      });
+    }
   },
   D: () => {
-    destination = selectedNode;
-    nodes.forEach((n) => {
-      if ("color" in n && n.color.background === "#FF0000") {
-        nodes.updateOnly({
-          id: n.id,
-          color: { background: "#97c2fc" },
-          font: { color: "#333" },
-        });
-      }
-    });
-    nodes.updateOnly({
-      id: selectedNode,
-      color: { background: "#FF0000" },
-      font: { color: "#333" },
-    });
+    let same = false;
+    if (destination.includes(selectedNode)) {
+      console.log(same);
+      nodes.updateOnly({
+        id: selectedNode,
+        color: { background: "#97c2fc" },
+        font: { color: "#333" },
+      });
+      same = true;
+      destination.pop(destination.indexOf(selectedNode));
+    }
+    if (!same) {
+      destination.push(selectedNode);
+      nodes.updateOnly({
+        id: selectedNode,
+        color: { background: "#FF0000" },
+        font: { color: "#333" },
+      });
+    }
+    console.log(destination);
   },
 };
 

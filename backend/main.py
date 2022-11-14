@@ -27,7 +27,7 @@ edges = {}
 graph = defaultdict(list)
 algorithm = "bfs"
 source = -1
-destination = -1
+destination = set()
 
 def bfs():
     global source, destination
@@ -53,7 +53,9 @@ def bfs():
                 visited.add(c)
                 backtrack[c] = curr
                 
-            if c == destination:
+            if c in destination:
+                destination = c
+                old_destination = c
                 visited.add(c)
                 while backtrack[destination] != source:
                     destination = backtrack[destination]
@@ -98,7 +100,7 @@ class BaseParam(BaseModel):
     edges: List[dict]
     algorithm: str
     source: int
-    destination: int
+    destination: list
 
 
 @app.post("/receiveInfo/", status_code=201)
@@ -109,15 +111,17 @@ async def receiveInfo(baseParam: BaseParam):
     graph = defaultdict(list)
     algorithm = "bfs"
     source = -1
-    destination = -1
+    destination = set()
     
     res = baseParam
     nodes = res.nodes
     edges = res.edges
     algorithm = res.algorithm
     source = res.source
-    destination = res.destination
     
+    for d in res.destination:
+        destination.add(d)
+        
     for edge in edges:
         graph[edge["from"]].append((edge["to"],int(edge["label"]))) 
 

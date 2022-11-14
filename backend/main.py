@@ -44,7 +44,7 @@ def bfs():
         curr = queue.pop(0)
         visited.add(curr)
         print(curr)
-        for c in graph[curr ]:
+        for c,d in graph[curr]:
             if c not in visited:
                 queue.append(c)
                 visited.add(c)
@@ -113,7 +113,7 @@ async def receiveInfo(baseParam: BaseParam):
     destination = res.destination
     
     for edge in edges:
-      graph[edge["from"]].append(edge["to"])
+        graph[edge["from"]].append((edge["to"],int(edge["label"]))) 
 
     print(algorithm)
     print(graph)

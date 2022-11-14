@@ -254,7 +254,11 @@ instructions = {
     nodes.updateOnly({ id: selectedNode, label: newName, title: heu });
   },
   Control: () => {
-    network.body.data.edges.add({ from: selectedNode, to: hoveredNode });
+    network.body.data.edges.add({
+      from: selectedNode,
+      to: hoveredNode,
+      label: "0",
+    });
   },
   h: () => {
     let heuristic = prompt("Enter Heuristic");

@@ -41,25 +41,26 @@ def bfs():
     visited = set()
     shortest_path = []
     while(queue):
-        for _ in range(len(queue)):
-            curr = queue.pop(0)
-            visited.add(curr)
-            for c in graph[curr]:
+        curr = queue.pop(0)
+        visited.add(curr)
+        print(curr)
+        for c in graph[curr ]:
+            if c not in visited:
+                queue.append(c)
+                visited.add(c)
                 backtrack[c] = curr
-                if c == destination:
-                    visited.add(c)
-                    while backtrack[destination] != source:
-                        destination = backtrack[destination]
-                        shortest_path.append(destination)
-                        shortest_path = shortest_path[::-1]
-                        
-                    shortest_path.insert(0, source)
-                    shortest_path.append(old_destination)
-                    print(shortest_path, visited)
-                    return shortest_path, visited
                 
-                if c not in visited:
-                    queue.insert(0,c)
+            if c == destination:
+                visited.add(c)
+                while backtrack[destination] != source:
+                    destination = backtrack[destination]
+                    shortest_path.append(destination)
+                    shortest_path = shortest_path[::-1]
+                    
+                shortest_path.insert(0, source)
+                shortest_path.append(old_destination)
+                print(shortest_path, visited)
+                return shortest_path, visited
             
     return {"msg":"bfs algorithm"}
 

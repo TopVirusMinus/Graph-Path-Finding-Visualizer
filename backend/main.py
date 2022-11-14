@@ -73,6 +73,7 @@ def dfs():
     return {"msg":"dfs algorithm"}
 
 def uniform_cost():
+    
     return {"msg":"uniform cost algorithm"}
 
 def best_first():

@@ -1,20 +1,35 @@
 // create an array with nodes
 var nodes = new vis.DataSet([
-  { id: 1, label: "Node 1" },
-  { id: 2, label: "Node 2" },
-  { id: 3, label: "Node 3" },
-  { id: 4, label: "Node 4" },
-  { id: 5, label: "Node 5" },
+  { id: 1, label: "S" },
+  { id: 2, label: "A" },
+  { id: 3, label: "D" },
+  { id: 4, label: "B" },
+  { id: 5, label: "C" },
+  { id: 6, label: "E" },
+  { id: 7, label: "G1" },
+  { id: 8, label: "G2" },
+  { id: 9, label: "F" },
+  { id: 10, label: "G3" },
 ]);
 
 // create an array with edges
 var edges = new vis.DataSet([
-  { from: 1, to: 2, label: "2" },
-  { from: 1, to: 3, label: "5" },
-  { from: 2, to: 3, label: "3" },
-  { from: 2, to: 4, label: "4" },
-  { from: 3, to: 4, label: "9" },
-  { from: 4, to: 5, label: "2" },
+  { from: 1, to: 2, label: "5" },
+  { from: 1, to: 4, label: "9" },
+  { from: 1, to: 3, label: "6" },
+  { from: 3, to: 1, label: "1" },
+  { from: 5, to: 1, label: "6" },
+  { from: 2, to: 4, label: "3" },
+  { from: 3, to: 5, label: "2" },
+  { from: 4, to: 5, label: "1" },
+  { from: 4, to: 2, label: "2" },
+  { from: 2, to: 7, label: "9" },
+  { from: 3, to: 6, label: "2" },
+  { from: 6, to: 10, label: "7" },
+  { from: 5, to: 8, label: "5" },
+  { from: 5, to: 9, label: "7" },
+  { from: 9, to: 3, label: "2" },
+  { from: 9, to: 10, label: "8" },
 ]);
 
 let clear = document
@@ -43,6 +58,15 @@ var data = {
 
 var options = {
   interaction: { hover: true },
+  edges: {
+    arrows: {
+      to: {
+        enabled: true,
+        scaleFactor: 1,
+        type: "arrow",
+      },
+    },
+  },
   manipulation: {
     enabled: true,
     addNode: function (nodeData, callback) {

@@ -40,7 +40,10 @@ def bfs():
     
     visited = set()
     shortest_path = []
+    fringe = []
+    
     while(queue):
+        fringe.append(queue.copy())    
         curr = queue.pop(0)
         visited.add(curr)
         print(curr)
@@ -59,8 +62,10 @@ def bfs():
                     
                 shortest_path.insert(0, source)
                 shortest_path.append(old_destination)
-                print(shortest_path, visited)
-                return shortest_path, visited
+                print("shorest path",shortest_path)
+                print("visited", visited)
+                print("fringe", fringe)
+                return shortest_path, visited, fringe
             
     return {"msg":"bfs algorithm"}
 

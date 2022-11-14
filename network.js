@@ -27,9 +27,10 @@ var prevSelectedNode = 0;
 var source = -1;
 var destination = -1;
 
-var lastNodeNum = 3;
+var lastNodeNum = 5;
 let hoveredNode = "";
 let algorithm = "bfs";
+
 document.getElementById("Algorithm").addEventListener("change", () => {
   algorithm = document.getElementById("Algorithm").value;
 });

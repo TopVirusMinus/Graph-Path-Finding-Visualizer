@@ -33,7 +33,6 @@ def bfs():
     global source, destination
     queue = []
     backtrack = {}
-    old_destination = destination
     
     print(source, destination)
     queue.append(source)
@@ -57,13 +56,15 @@ def bfs():
                 destination = c
                 old_destination = c
                 visited.add(c)
+                
                 while backtrack[destination] != source:
                     destination = backtrack[destination]
                     shortest_path.append(destination)
-                    shortest_path = shortest_path[::-1]
-                    
+                
+                shortest_path = shortest_path[::-1]    
                 shortest_path.insert(0, source)
                 shortest_path.append(old_destination)
+                
                 print("shorest path",shortest_path)
                 print("visited", visited)
                 print("fringe", fringe)
@@ -75,7 +76,48 @@ def dfs():
     return {"msg":"dfs algorithm"}
 
 def uniform_cost():
+    global source, destination
+    priority_queue = []
+    backtrack = {}
+    visited = set()
+    shortest_path = []
+    fringe = []
     
+    priority_queue.append((source,0))
+    print(priority_queue)
+    
+    while priority_queue:
+        print(priority_queue)
+        fringe.append(priority_queue.copy())    
+
+        curr, cost = priority_queue.pop(0)
+        print(curr)
+        visited.add((curr,cost))
+        
+        if curr in destination:
+            print("found!")
+            new_destination = curr
+            old_destination = curr
+            visited.add(curr)
+            while backtrack[new_destination] != source:
+                new_destination = backtrack[new_destination]
+                shortest_path.append(new_destination)
+            
+            shortest_path = shortest_path[::-1]    
+            shortest_path.insert(0, source)
+            shortest_path.append(old_destination)
+            print("shorest path",shortest_path)
+            print("visited", visited)
+            print("fringe", fringe)
+            return shortest_path, visited, fringe
+        
+        for n,c in graph[curr]:
+            if (n, c+cost) not in visited:
+                backtrack[n] = curr
+                visited.add((n, c+cost))
+                priority_queue.append((n, c+cost))
+                
+        priority_queue = sorted(priority_queue,key=lambda t: t[1])
     return {"msg":"uniform cost algorithm"}
 
 def best_first():

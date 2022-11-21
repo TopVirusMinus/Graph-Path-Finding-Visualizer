@@ -1,16 +1,23 @@
 // create an array with nodes
 var nodes = new vis.DataSet([
-  { id: 1, label: "S" },
-  { id: 2, label: "A" },
-  { id: 3, label: "D" },
-  { id: 4, label: "B" },
-  { id: 5, label: "C" },
-  { id: 6, label: "E" },
-  { id: 7, label: "G1" },
-  { id: 8, label: "G2" },
-  { id: 9, label: "F" },
-  { id: 10, label: "G3" },
+  { id: 1, label: "S", title: "5" },
+  { id: 2, label: "A", title: "7" },
+  { id: 3, label: "D", title: "6" },
+  { id: 4, label: "B", title: "3" },
+  { id: 5, label: "C", title: "4" },
+  { id: 6, label: "E", title: "5" },
+  { id: 7, label: "G1", title: "0" },
+  { id: 8, label: "G2", title: "0" },
+  { id: 9, label: "F", title: "6" },
+  { id: 10, label: "G3", title: "0" },
 ]);
+
+nodes.forEach((node) => {
+  nodes.updateOnly({
+    id: node.id,
+    label: `${node.label} (${node.title})`,
+  });
+});
 
 // create an array with edges
 var edges = new vis.DataSet([
@@ -45,6 +52,38 @@ var destination = [];
 var lastNodeNum = 5;
 let hoveredNode = "";
 let algorithm = "bfs";
+
+var modal = document.querySelector("#modal");
+var modalOverlay = document.querySelector("#modal-overlay");
+var closeButton = document.querySelector("#modal-done");
+var modalInput = document.getElementById("modal-input");
+var modalTitle = document.getElementById("modal-title");
+
+modalInput.addEventListener("keyup", (e) => {
+  e.preventDefault();
+  if (e.key === "Enter") {
+    closeButton.click();
+  }
+});
+
+closeButton.addEventListener("click", function () {
+  modal.classList.toggle("closed");
+  modalOverlay.classList.toggle("closed");
+});
+
+{
+  /* <div class="modal" id="modal">
+          <div class="modal-overlay" id="modal-overlay">
+            <h1 id="modal-title">Enter Cost</h1>
+            <input type="text" name="" id="modal-input" autofocus />
+            <button id="modal-done">Done</button>
+          </div> */
+}
+
+// openButton.addEventListener("click", function () {
+//   modal.classList.toggle("closed");
+//   modalOverlay.classList.toggle("closed");
+// });
 
 document.getElementById("Algorithm").addEventListener("change", () => {
   algorithm = document.getElementById("Algorithm").value;
@@ -88,6 +127,7 @@ var options = {
 };
 
 document.getElementById("visualize").addEventListener("click", async () => {
+  console.log(source, destination);
   axios
     .post("http://localhost:8000/receiveInfo/", {
       nodes: nodes.get(),
@@ -155,7 +195,8 @@ network.on("click", (params) => {
     lastNodeNum += 1;
     var updatedIds = nodes.add([
       {
-        label: `Node ${lastNodeNum}`,
+        label: `Node ${lastNodeNum} (-1)`,
+        title: "-1",
         x: params.pointer.canvas.x,
         y: params.pointer.canvas.y,
       },
@@ -266,17 +307,43 @@ instructions = {
   Delete: () => network.deleteSelected(),
   Enter: () => {
     !selectededge && "";
+
+    // modal.classList.toggle("closed");
+    // modalOverlay.classList.toggle("closed");
+    // modalTitle.innerHTML = "Enter Cost";
     let cost = prompt("Enter Cost");
+    // let cost = modalInput.value;
+    // console.log(modalInput.value);
     edges.updateOnly({ id: selectededge, label: cost, title: heu });
     console.log(`edit edge cost ${selectededge}`);
   },
   r: () => {
     let newName = prompt("Enter New Name");
-    nodes.updateOnly({ id: selectedNode, label: newName, title: heu });
+    let NODE = 0;
+    nodes.forEach((node) => {
+      if (node.id === selectedNode) {
+        NODE = node;
+        return;
+      }
+    });
+    nodes.updateOnly({
+      id: selectedNode,
+      label: `${newName} (${NODE.title})`,
+    });
   },
   R: () => {
     let newName = prompt("Enter New Name");
-    nodes.updateOnly({ id: selectedNode, label: newName, title: heu });
+    let NODE = 0;
+    nodes.forEach((node) => {
+      if (node.id === selectedNode) {
+        NODE = node;
+        return;
+      }
+    });
+    nodes.updateOnly({
+      id: selectedNode,
+      label: `${newName} (${NODE.title})`,
+    });
   },
   Control: () => {
     network.body.data.edges.add({
@@ -287,11 +354,43 @@ instructions = {
   },
   h: () => {
     let heuristic = prompt("Enter Heuristic");
-    nodes.updateOnly({ id: selectedNode, title: heuristic });
+    let NODE = 0;
+    nodes.forEach((node) => {
+      if (node.id === selectedNode) {
+        NODE = node;
+        return;
+      }
+    });
+
+    let oldName = NODE.label;
+    oldName = oldName.split("(");
+    oldName = oldName[0];
+
+    nodes.updateOnly({
+      id: selectedNode,
+      label: `${oldName} (${heuristic})`,
+      title: heuristic,
+    });
   },
   H: () => {
     let heuristic = prompt("Enter Heuristic");
-    nodes.updateOnly({ id: selectedNode, title: heuristic });
+    let NODE = 0;
+    nodes.forEach((node) => {
+      if (node.id === selectedNode) {
+        NODE = node;
+        return;
+      }
+    });
+
+    let oldName = NODE.label;
+    oldName = oldName.split("(");
+    oldName = oldName[0];
+
+    nodes.updateOnly({
+      id: selectedNode,
+      label: `${oldName} (${heuristic})`,
+      title: heuristic,
+    });
   },
   s: () => {
     source = selectedNode;
@@ -328,7 +427,7 @@ instructions = {
       font: { color: "#333" },
     });
   },
-  d: () => {
+  g: () => {
     console.log(destination);
     let same = false;
     if (destination.includes(selectedNode)) {
@@ -350,7 +449,7 @@ instructions = {
       });
     }
   },
-  D: () => {
+  G: () => {
     let same = false;
     if (destination.includes(selectedNode)) {
       console.log(same);

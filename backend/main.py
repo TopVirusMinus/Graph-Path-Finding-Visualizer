@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from collections import defaultdict
+import json
 
 app = FastAPI()
 
@@ -46,7 +47,7 @@ def bfs():
         curr = queue.pop(0)
         visited.add(curr)
         print(curr)
-        for c,d in graph[curr]:
+        for c,d,h in graph[curr]:
             if c not in visited:
                 queue.append(c)
                 visited.add(c)
@@ -87,11 +88,11 @@ def uniform_cost():
     print(priority_queue)
     
     while priority_queue:
-        print(priority_queue)
+        #print(priority_queue)
         fringe.append(priority_queue.copy())    
 
         curr, cost = priority_queue.pop(0)
-        print(curr)
+        #print(curr)
         visited.add((curr,cost))
         
         if curr in destination:
@@ -107,11 +108,11 @@ def uniform_cost():
             shortest_path.insert(0, source)
             shortest_path.append(old_destination)
             print("shorest path",shortest_path)
-            print("visited", visited)
-            print("fringe", fringe)
+            #print("visited", visited)
+            #print("fringe", fringe)
             return shortest_path, visited, fringe
         
-        for n,c in graph[curr]:
+        for n,c,h in graph[curr]:
             if (n, c+cost) not in visited:
                 backtrack[n] = curr
                 visited.add((n, c+cost))
@@ -120,13 +121,13 @@ def uniform_cost():
         priority_queue = sorted(priority_queue,key=lambda t: t[1])
     return {"msg":"uniform cost algorithm"}
 
-def best_first():
+def greedy_best_first():
     return {"msg":"best first algorithm"}
 
 def a_star():
     return {"msg":"A* algorithm"}
 
-algorithms = {"bfs": bfs, "dfs":dfs, "uniformCost":uniform_cost, "best_first":best_first, "A*":a_star}
+algorithms = {"bfs": bfs, "dfs":dfs, "uniformCost":uniform_cost, "greedyBestFirst":greedy_best_first, "A*":a_star}
 
 @app.get("/", tags=["root"])
 async def read_root() -> dict:
@@ -152,7 +153,7 @@ async def receiveInfo(baseParam: BaseParam):
     edges = {}
     graph = defaultdict(list)
     algorithm = "bfs"
-    source = -1
+    source = -1                                                                                 
     destination = set()
     
     res = baseParam
@@ -161,11 +162,18 @@ async def receiveInfo(baseParam: BaseParam):
     algorithm = res.algorithm
     source = res.source
     
+    heuristics = defaultdict(lambda: -1)
+    
+    for n in nodes:
+        heuristics[n["id"]] = int(n["title"])
+
+    #print(heuristics)
     for d in res.destination:
         destination.add(d)
         
     for edge in edges:
-        graph[edge["from"]].append((edge["to"],int(edge["label"]))) 
+        h = heuristics[edge["to"]]
+        graph[edge["from"]].append((edge["to"],int(edge["label"]), h)) 
 
     print(algorithm)
     print(graph)

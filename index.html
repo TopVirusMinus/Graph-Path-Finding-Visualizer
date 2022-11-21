@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Network</title>
+    <title>Graph Path Visualizer</title>
     <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script
       defer
@@ -15,6 +15,13 @@
     <div class="settings">
       <div class="left">
         <h1>Change Node</h1>
+        <div class="modal closed" id="modal">
+          <div class="modal-overlay" id="modal-overlay">
+            <h1 id="modal-title">Enter Cost</h1>
+            <input type="text" name="" id="modal-input" value="0" autofocus />
+            <button id="modal-done">Done</button>
+          </div>
+        </div>
         <input type="text" id="nname" placeholder="Name" />
         <input type="text" id="heu" placeholder="Heuristic" />
         <input type="button" onclick="updatenode()" value="change" />
@@ -27,7 +34,7 @@
           <option value="bfs" selected>BFS</option>
           <option value="dfs">DFS</option>
           <option value="uniformCost">Uniform Cost</option>
-          <option value="bestFirst">Best First</option>
+          <option value="greedyBestFirst">Greedy Best First</option>
           <option value="A*">A*</option>
         </select>
         <br />
@@ -41,7 +48,7 @@
           <p><code>Double-Click</code> Add new node</p>
           <p><code>Del</code> Delete selected node</p>
           <p><code>s</code> Make Selected Node a Start Node</p>
-          <p><code>d</code> Make Selected Node a Destination Node</p>
+          <p><code>g</code> Make Selected Node a Goal Node</p>
           <p><code>Enter</code> Add cost to selected edge</p>
           <p><code>h</code> Add Heuristic to selected node</p>
           <p><code>r</code> Rename selected node</p>

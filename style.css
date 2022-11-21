@@ -14,7 +14,7 @@ p {
 #mynetwork {
   width: 100vw;
   height: 80vh;
-  border-top: 1px solid lightgray;
+  border-top: 1px solid #444;
 }
 
 /* .settings {
@@ -28,17 +28,31 @@ p {
   width: 20%;
   padding: 0 0 2rem 5rem;
   /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #444;
+  border-left: 1px solid #444;
+  margin-bottom: 10px;
 }
 
 .right {
   width: 50%;
   /* border: 1px solid wheat; */
   text-align: center;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #444;
+  border-left: 1px solid #444;
+  border-right: 1px solid #444;
+  margin-bottom: 10px;
 }
 
 .settings {
   /* border: 1px solid greenyellow; */
   display: flex;
+  justify-content: center;
 }
 
 code {

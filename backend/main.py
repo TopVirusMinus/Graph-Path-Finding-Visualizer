@@ -221,8 +221,24 @@ async def receiveInfo(baseParam: BaseParam):
     for edge in edges:
         h = heuristics[edge["to"]]
         graph[edge["from"]].append((edge["to"],int(edge["label"]))) 
-
-    print(algorithm)
-    print(graph)
-    print(source, destination)
+    
+    
+    def sort_alphabetically(idd):
+        print(idd)
+        global nodes, graph
+        name = ""
+        for node in nodes:
+            if node["id"] == idd:
+                name = node["label"]
+                break
+        return name
+    
+    #sort the graph alphabetically
+    for g in graph.keys():
+        graph[g].sort(key=lambda l:sort_alphabetically(l[0]))
+        
+    #print("SORT", sort_alphabetically(graph[1][0][0])) 
+    #print(algorithm)
+    print("GRAPH", graph)
+    #print(source, destination)
 

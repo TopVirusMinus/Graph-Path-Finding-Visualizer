@@ -127,7 +127,11 @@ var options = {
 };
 
 document.getElementById("visualize").addEventListener("click", async () => {
-  console.log(source, destination);
+  console.log("Source type = ", typeof source);
+  console.log("source", source, "destination", destination);
+  console.log("nodes", nodes.get());
+  console.log("edges", edges.get());
+  console.log("algorithm", algorithm);
   axios
     .post("http://localhost:8000/receiveInfo/", {
       nodes: nodes.get(),
@@ -140,6 +144,7 @@ document.getElementById("visualize").addEventListener("click", async () => {
     .then(async () => {
       let path = await axios.get("http://localhost:8000/computePath/");
       console.log(path.data);
+      [shortestPath, fringe, visitedList] = path.data;
     })
     .catch((err) => console.log(err));
 });
@@ -156,12 +161,12 @@ network.on("click", function (params) {
     4
   );
 
-  console.log("nodes: ", data.nodes.get());
-  console.log("edges: ", data.edges.get());
+  //console.log("nodes: ", data.nodes.get());
+  //console.log("edges: ", data.edges.get());
 
-  console.log(
-    "click event, getNodeAt returns: " + this.getNodeAt(params.pointer.DOM)
-  );
+  //console.log(
+  //  "click event, getNodeAt returns: " + this.getNodeAt(params.pointer.DOM)
+  //);
   selectedNode = this.getNodeAt(params.pointer.DOM);
   if (ct % 2 == 0) {
     startnode = this.getNodeAt(params.pointer.DOM);
@@ -191,7 +196,7 @@ network.on("doubleClick", function (params) {
 
 network.on("click", (params) => {
   if (params.nodes.length == 0 && params.edges.length == 0) {
-    console.log("add new node!");
+    //console.log("add new node!");
     lastNodeNum += 1;
     var updatedIds = nodes.add([
       {
@@ -206,7 +211,7 @@ network.on("click", (params) => {
 var counter = 1;
 function updateedge() {
   var cost = document.getElementById("cost").value;
-  console.log(heu);
+  //console.log(heu);
   edges.add([{ id: counter, from: startnode, to: endnode, label: cost }]);
   counter++;
 }
@@ -225,10 +230,10 @@ var endnode = 0;
 network.on("dragStart", function (params) {
   // There's no point in displaying this event on screen, it gets immediately overwritten
   params.event = "[original event]";
-  console.log("dragStart Event:", params);
-  console.log(
-    "dragStart event, getNodeAt returns: " + this.getNodeAt(params.pointer.DOM)
-  );
+  //console.log("dragStart Event:", params);
+  //console.log(
+  //  "dragStart event, getNodeAt returns: " + this.getNodeAt(params.pointer.DOM)
+  //);
 });
 
 network.on("dragging", function (params) {
@@ -244,7 +249,7 @@ network.on("dragging", function (params) {
 function updatenode() {
   var txt = document.getElementById("nname").value;
   var heu = document.getElementById("heu").value;
-  console.log(heu);
+  //console.log(heu);
   nodes.updateOnly({ id: selectedNode, label: txt, title: heu });
 }
 
@@ -315,7 +320,7 @@ instructions = {
     // let cost = modalInput.value;
     // console.log(modalInput.value);
     edges.updateOnly({ id: selectededge, label: cost, title: heu });
-    console.log(`edit edge cost ${selectededge}`);
+    //console.log(`edit edge cost ${selectededge}`);
   },
   r: () => {
     let newName = prompt("Enter New Name");
@@ -394,7 +399,7 @@ instructions = {
   },
   s: () => {
     source = selectedNode;
-    console.log(source);
+    //console.log(source);
     nodes.forEach((n) => {
       if ("color" in n && n.color.background === "#00ff00") {
         nodes.updateOnly({
@@ -428,10 +433,10 @@ instructions = {
     });
   },
   g: () => {
-    console.log(destination);
+    //console.log(destination);
     let same = false;
     if (destination.includes(selectedNode)) {
-      console.log(same);
+      //console.log(same);
       nodes.updateOnly({
         id: selectedNode,
         color: { background: "#97c2fc" },
@@ -452,7 +457,7 @@ instructions = {
   G: () => {
     let same = false;
     if (destination.includes(selectedNode)) {
-      console.log(same);
+      //console.log(same);
       nodes.updateOnly({
         id: selectedNode,
         color: { background: "#97c2fc" },
@@ -469,12 +474,12 @@ instructions = {
         font: { color: "#333" },
       });
     }
-    console.log(destination);
+    //console.log(destination);
   },
 };
 
 container.addEventListener("keydown", (e) => {
-  console.log(e.key);
+  //console.log(e.key);
   instructions[e.key]();
 });
 
@@ -488,10 +493,10 @@ network.on("selectNode", function (params) {
   prevSelectedNode = selectedNode;
   selectedNode = params.nodes[0];
   prevSelectedNode === 0 ? (prevSelectedNode = selectedNode) : prevSelectedNode;
-  console.log(prevSelectedNode, selectedNode);
+  //console.log(prevSelectedNode, selectedNode);
 });
 network.on("selectEdge", function (params) {
-  console.log("selectEdge Event:", params);
+  //console.log("selectEdge Event:", params);
   selectededge = this.getEdgeAt(params.pointer.DOM);
 });
 network.on("deselectNode", function (params) {

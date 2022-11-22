@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -57,10 +57,10 @@ def bfs():
                 backtrack[c] = curr
                 
             if c in destination:
+                fringe.append(queue.copy())    
                 destination = c
                 old_destination = c
-                visited.add(c)
-                
+                visitedList.append(c)
                 while backtrack[destination] != source:
                     destination = backtrack[destination]
                     shortest_path.append(destination)
@@ -70,13 +70,58 @@ def bfs():
                 shortest_path.append(old_destination)
                 
                 print("shorest path",shortest_path)
-                print("visited", visited)
+                print("visited", visitedList)
                 print("fringe", fringe)
-                return shortest_path, visitedList, fringe
+                return shortest_path, fringe, visitedList
             
     return {"msg":"bfs algorithm"}
 
 def dfs():
+    global source, destination
+    stack = []
+    backtrack = {}
+
+    print(source, destination)
+    stack.append(source)
+
+    visited = set()
+    visitedList = []
+    shortest_path = []
+    fringe = []
+
+    while(stack):
+        fringe.append(stack.copy())    
+        curr = stack.pop(0)
+
+        visited.add(curr)
+        visitedList.append(curr)
+        
+        print("DFS", curr)
+        for c,d in graph[curr]:
+            if c not in visited:
+                stack.insert(0,c)
+                visited.add(c)
+                backtrack[c] = curr
+                
+            if c in destination:
+                fringe.append(stack.copy())    
+                destination = c
+                old_destination = c
+                visitedList.append(c)
+
+                while backtrack[destination] != source:
+                    destination = backtrack[destination]
+                    shortest_path.append(destination)
+                
+                shortest_path = shortest_path[::-1]    
+                shortest_path.insert(0, source)
+                shortest_path.append(old_destination)
+                
+                print("shortest path",shortest_path)
+                print("visited", visited)
+                print("fringe", fringe)
+                return shortest_path, fringe, visitedList
+            
     return {"msg":"dfs algorithm"}
 
 def uniform_cost():
@@ -102,6 +147,7 @@ def uniform_cost():
         
         if curr in destination:
             print("found!")
+            fringe.append(priority_queue.copy())    
             new_destination = curr
             old_destination = curr
             visited.add(curr)
@@ -115,7 +161,7 @@ def uniform_cost():
             print("shorest path",shortest_path)
             #print("visited", visited)
             #print("fringe", fringe)
-            return shortest_path, visitedList, fringe
+            return shortest_path, fringe, visitedList
         
         for n,c in graph[curr]:
             if (n, c+cost) not in visited:
@@ -154,6 +200,7 @@ def a_star():
         visited.add(node)
         visitedList.append(node)
         if node in destination:
+            fringe.append(queue.copy())    
             new_destination = node
             #print(backtrack)
             while backtrack[new_destination] != source:
@@ -188,7 +235,7 @@ class BaseParam(BaseModel):
     nodes: List[dict]
     edges: List[dict]
     algorithm: str
-    source: int
+    source: Union[int, str]
     destination: list
 
 

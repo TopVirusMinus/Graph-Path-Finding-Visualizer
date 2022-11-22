@@ -74,7 +74,7 @@ def bfs():
                 print("shorest path", shortest_path)
                 print("visited", visited)
                 print("fringe", fringe)
-                return shortest_path, fringe, visitedList
+                return shortest_path, fringe, visitedList, []
 
     return {"msg": "bfs algorithm"}
 
@@ -92,22 +92,22 @@ def dfs():
     shortest_path = []
     fringe = []
 
-    while(stack):
-        fringe.append(stack.copy())    
+    while (stack):
+        fringe.append(stack.copy())
         curr = stack.pop(0)
 
         visited.add(curr)
         visitedList.append(curr)
 
         print("DFS", curr)
-        for c,d in graph[curr]:
+        for c, d in graph[curr]:
             if c not in visited:
-                stack.insert(0,c)
+                stack.insert(0, c)
                 visited.add(c)
                 backtrack[c] = curr
 
             if c in destination:
-                fringe.append(stack.copy())    
+                fringe.append(stack.copy())
                 destination = c
                 old_destination = c
                 visitedList.append(c)
@@ -116,14 +116,14 @@ def dfs():
                     destination = backtrack[destination]
                     shortest_path.append(destination)
 
-                shortest_path = shortest_path[::-1]    
+                shortest_path = shortest_path[::-1]
                 shortest_path.insert(0, source)
                 shortest_path.append(old_destination)
 
-                print("shortest path",shortest_path)
+                print("shortest path", shortest_path)
                 print("visited", visited)
                 print("fringe", fringe)
-                return shortest_path, fringe, visitedList
+                return shortest_path, fringe, visitedList, []
 
     return {"msg": "dfs algorithm"}
 
@@ -163,8 +163,19 @@ def uniform_cost():
             shortest_path.append(old_destination)
             print("shorest path", shortest_path)
             #print("visited", visited)
-            print("fringe", fringe)
-            return shortest_path, fringe, visitedList
+            new_fringe = []
+            f_cost = []
+            for f in fringe:
+                tmp = []
+                tmp2 = []
+                for z in f:
+                    tmp.append(z[0])
+                    tmp2.append(z[1])
+                new_fringe.append(tmp)
+                f_cost.append(tmp2)
+                
+            print(new_fringe)
+            return shortest_path, new_fringe, visitedList, f_cost
 
         for n, c in graph[curr]:
             if (n, c+cost) not in visited:
@@ -178,7 +189,58 @@ def uniform_cost():
 
 
 def greedy_best_first():
+    global source, destination
+    visited = set()
+    visitedList = []
+    queue = [(source, 0)]
+    fringe = []
+    backtrack = {}
+    shortest_path = []
 
+    while queue:
+        queue.sort(key=lambda t: t[1])  # to sort according f-cost ystaa
+        fringe.append(queue.copy())
+
+        node, cost = queue.pop(0)  # a5tar 2a 2l f-cost\
+
+        if node in visited:
+            continue
+
+        visited.add(node)
+        visitedList.append(node)
+        if node in destination:
+            fringe.append(queue.copy())
+            new_destination = node
+            # print(backtrack)
+            while backtrack[new_destination] != source:
+                # print(new_destination)
+                new_destination = backtrack[new_destination]
+                shortest_path.append(new_destination)
+
+            shortest_path = shortest_path[::-1]
+            shortest_path.insert(0, source)
+            shortest_path.append(node)
+            
+            new_fringe = []
+            f_cost = []
+            
+            for f in fringe:
+                tmp = []
+                tmp2 = []
+                for z in f:
+                    tmp.append(z[0])
+                    tmp2.append(z[1])
+                new_fringe.append(tmp)
+                f_cost.append(tmp2)
+                
+            print(new_fringe)
+            return shortest_path, new_fringe, visitedList, f_cost
+
+        for node2, cost2 in graph[node]:
+            if node2 not in visited:
+                backtrack[node2] = node
+                costXheu = heuristics[node2]
+                queue.append((node2, costXheu))
     return {"msg": "best first algorithm"}
 
 
@@ -216,7 +278,21 @@ def a_star():
             shortest_path = shortest_path[::-1]
             shortest_path.insert(0, source)
             shortest_path.append(node)
-            return shortest_path, fringe, visitedList
+            
+            new_fringe = []
+            f_cost = []
+            for f in fringe:
+                tmp = []
+                tmp2 = []
+                for z in f:
+                    tmp.append(z[0])
+                    tmp2.append(z[1])
+                new_fringe.append(tmp)
+                f_cost.append(tmp2)
+                
+                
+            print(new_fringe)
+            return shortest_path, new_fringe, visitedList, f_cost
 
         for node2, cost2 in graph[node]:
             if node2 not in visited:

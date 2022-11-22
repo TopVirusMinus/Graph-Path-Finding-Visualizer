@@ -150,23 +150,29 @@ document.getElementById("visualize").addEventListener("click", async () => {
     .then(async () => {
       let path = await axios.get("http://localhost:8000/computePath/");
       console.log(path.data);
-      [shortestpath, fringe, visited] = path.data;
+      [shortestpath, fringe, visited, f_cost] = path.data;
+
       let fringe_letters = [];
       for (var i = 0; i < fringe.length; i++) {
         let tmp = [];
+        let tmp2 = [];
+        console.log("Fringe", fringe[i]);
         for (var j = 0; j < fringe[i].length; j++) {
           nodes.forEach((node) => {
             if (node.id === fringe[i][j]) {
               tmp.push(node.label.split("(")[0]);
+              tmp2.push(f_cost);
             }
           });
         }
+        console.log(tmp2);
         fringe_letters.push(tmp);
       }
+
+      document.getElementById("fringe").innerHTML = "";
+
       for (let i = 0; i < fringe_letters.length; i++) {
-        document.getElementById(
-          "fringe"
-        ).innerHTML += `<p class="fringe-item">${fringe_letters[i]}</p>`;
+        document.getElementById("fringe").innerHTML += `${fringe_letters[i]},`;
       }
       document.getElementById("fringeh1").innerHTML = "Fringe:";
 
@@ -174,13 +180,13 @@ document.getElementById("visualize").addEventListener("click", async () => {
       for (let i = 0; i < shortestpath.length; i++) {
         nodes.forEach((node) => {
           if (node.id === shortestpath[i]) {
-            document.getElementById("visited").innerHTML += `${
+            document.getElementById("shortestPath").innerHTML += `${
               node.label.split("(")[0]
             } → `;
           }
         });
       }
-      document.getElementById("visitedh1").innerHTML = "Visited:";
+      document.getElementById("shortestPathh1").innerHTML = "Shortest Path:";
 
       console.log("SHORTEST", shortestpathLetters);
     })

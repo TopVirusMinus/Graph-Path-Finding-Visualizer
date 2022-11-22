@@ -152,11 +152,17 @@ document.getElementById("visualize").addEventListener("click", async () => {
       console.log(path.data);
       [shortestpath, fringe, visited] = path.data
       console.log("hello")
+      fringename = [...fringe];
+      for (var i = 0; i < fringename.length; i++) {
+        for (var k = 0; k < fringename[k].length; k++) {
+          fringename[i][k] = nodes.get(fringename[i][k]).label
+        }
+      }
       for (var i = 0; i < fringe.length; i++) {
-        document.getElementById("fringe").innerHTML += fringe[i] + "<br>"
+        document.getElementById("fringe").innerHTML += fringename[i] + "<br>"
       }
       document.getElementById("fringeh1").innerHTML = "Fringe:"
-
+      console.log(nodes.get(1).label)
 
     })
     .catch((err) => console.log(err));

@@ -151,14 +151,12 @@ document.getElementById("visualize").addEventListener("click", async () => {
       let path = await axios.get("http://localhost:8000/computePath/");
       console.log(path.data);
       [shortestpath, fringe, visited] = path.data;
-      console.log("hello");
       let fringe_letters = [];
       for (var i = 0; i < fringe.length; i++) {
         let tmp = [];
         for (var j = 0; j < fringe[i].length; j++) {
           nodes.forEach((node) => {
             if (node.id === fringe[i][j]) {
-              console.log(node);
               tmp.push(node.label.split("(")[0]);
             }
           });
@@ -171,6 +169,20 @@ document.getElementById("visualize").addEventListener("click", async () => {
         ).innerHTML += `<p class="fringe-item">${fringe_letters[i]}</p>`;
       }
       document.getElementById("fringeh1").innerHTML = "Fringe:";
+
+      let shortestpathLetters = [];
+      for (let i = 0; i < shortestpath.length; i++) {
+        nodes.forEach((node) => {
+          if (node.id === shortestpath[i]) {
+            document.getElementById("visited").innerHTML += `${
+              node.label.split("(")[0]
+            } → `;
+          }
+        });
+      }
+      document.getElementById("visitedh1").innerHTML = "Visited:";
+
+      console.log("SHORTEST", shortestpathLetters);
     })
     .catch((err) => console.log(err));
 });

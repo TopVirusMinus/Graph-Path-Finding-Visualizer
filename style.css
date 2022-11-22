@@ -71,6 +71,10 @@ code {
   width: fit-content;
 }
 
+.visitedContainer {
+  border-top: #444 solid 1px;
+}
+
 .modal {
   background-color: rgba(34, 34, 34, 0.967);
   width: 600px;

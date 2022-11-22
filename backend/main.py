@@ -80,6 +80,51 @@ def bfs():
 
 
 def dfs():
+    global source, destination
+    stack = []
+    backtrack = {}
+
+    print(source, destination)
+    stack.append(source)
+
+    visited = set()
+    visitedList = []
+    shortest_path = []
+    fringe = []
+
+    while(stack):
+        fringe.append(stack.copy())    
+        curr = stack.pop(0)
+
+        visited.add(curr)
+        visitedList.append(curr)
+
+        print("DFS", curr)
+        for c,d in graph[curr]:
+            if c not in visited:
+                stack.insert(0,c)
+                visited.add(c)
+                backtrack[c] = curr
+
+            if c in destination:
+                fringe.append(stack.copy())    
+                destination = c
+                old_destination = c
+                visitedList.append(c)
+
+                while backtrack[destination] != source:
+                    destination = backtrack[destination]
+                    shortest_path.append(destination)
+
+                shortest_path = shortest_path[::-1]    
+                shortest_path.insert(0, source)
+                shortest_path.append(old_destination)
+
+                print("shortest path",shortest_path)
+                print("visited", visited)
+                print("fringe", fringe)
+                return shortest_path, fringe, visitedList
+
     return {"msg": "dfs algorithm"}
 
 

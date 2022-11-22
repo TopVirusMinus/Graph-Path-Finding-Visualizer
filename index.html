@@ -1,66 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Graph Path Visualizer</title>
-    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script
-      defer
-      type="text/javascript"
-      src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
-    ></script>
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body>
-    <div class="settings">
-      <div class="left">
-        <h1>Change Node</h1>
-        <div class="modal closed" id="modal">
-          <div class="modal-overlay" id="modal-overlay">
-            <h1 id="modal-title">Enter Cost</h1>
-            <input type="text" name="" id="modal-input" value="0" autofocus />
-            <button id="modal-done">Done</button>
-          </div>
+<head>
+  <title>Graph Path Visualizer</title>
+  <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script defer type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="settings">
+    <div class="left">
+      <h1>Change Node</h1>
+      <div class="modal closed" id="modal">
+        <div class="modal-overlay" id="modal-overlay">
+          <h1 id="modal-title">Enter Cost</h1>
+          <input type="text" name="" id="modal-input" value="0" autofocus />
+          <button id="modal-done">Done</button>
         </div>
-        <input type="text" id="nname" placeholder="Name" />
-        <input type="text" id="heu" placeholder="Heuristic" />
-        <input type="button" onclick="updatenode()" value="change" />
-        <h1>Add Path Cost</h1>
-        <input type="text" id="cost" placeholder="Cost" />
-        <input type="button" onclick="updateedge()" value="Add" />
-        <br />
-        <label for="Algorithm"> Select Algorithm</label>
-        <select id="Algorithm">
-          <option value="bfs" selected>BFS</option>
-          <option value="dfs">DFS</option>
-          <option value="uniformCost">Uniform Cost</option>
-          <option value="greedyBestFirst">Greedy Best First</option>
-          <option value="A*">A*</option>
-        </select>
-        <br />
-        <button id="visualize">Visualize</button>
-        <br />
-        <button id="clear">Clear</button>
       </div>
-      <div class="right">
-        <h1>Shortcuts</h1>
-        <div class="instructions">
-          <p><code>Double-Click</code> Add new node</p>
-          <p><code>Del</code> Delete selected node</p>
-          <p><code>s</code> Make Selected Node a Start Node</p>
-          <p><code>g</code> Make Selected Node a Goal Node</p>
-          <p><code>Enter</code> Add cost to selected edge</p>
-          <p><code>h</code> Add Heuristic to selected node</p>
-          <p><code>r</code> Rename selected node</p>
-          <p>
-            <code>ctrl</code> Add edge between selected node and hovered node
-          </p>
-        </div>
+      <input type="text" id="nname" placeholder="Name" />
+      <input type="text" id="heu" placeholder="Heuristic" />
+      <input type="button" onclick="updatenode()" value="change" />
+      <h1>Add Path Cost</h1>
+      <input type="text" id="cost" placeholder="Cost" />
+      <input type="button" onclick="updateedge()" value="Add" />
+      <br />
+      <label for="Algorithm"> Select Algorithm</label>
+      <select id="Algorithm">
+        <option value="bfs" selected>BFS</option>
+        <option value="dfs">DFS</option>
+        <option value="uniformCost">Uniform Cost</option>
+        <option value="greedyBestFirst">Greedy Best First</option>
+        <option value="A*">A*</option>
+      </select>
+      <br />
+      <button id="visualize">Visualize</button>
+      <br />
+      <button id="clear">Clear</button>
+    </div>
+    <div class="right">
+      <h1>Shortcuts</h1>
+      <div class="instructions">
+        <p><code>Double-Click</code> Add new node</p>
+        <p><code>Del</code> Delete selected node</p>
+        <p><code>s</code> Make Selected Node a Start Node</p>
+        <p><code>g</code> Make Selected Node a Goal Node</p>
+        <p><code>Enter</code> Add cost to selected edge</p>
+        <p><code>h</code> Add Heuristic to selected node</p>
+        <p><code>r</code> Rename selected node</p>
+        <p><code>Right Arrow</code> Forward one step</p>
+        <p><code>Left Arrow</code> Backward one step</p>
+        <p><code>p</code> Reveal Shortest Path</p>
+        <p>
+          <code>ctrl</code> Add edge between selected node and hovered node
+        </p>
       </div>
     </div>
-    <div id="mynetwork"></div>
-    <script defer src="network.js" type="text/javascript"></script>
-    <h2 id="eventSpanHeading"></h2>
-    <pre id="eventSpanContent"></pre>
-  </body>
+    <div>
+      <h1 id="fringeh1"></h1>
+      <div id="fringe" style="font-size:20px ;"></div>
+    </div>
+  </div>
+  <div id="mynetwork"></div>
+  <script defer src="network.js" type="text/javascript"></script>
+  <h2 id="eventSpanHeading"></h2>
+  <pre id="eventSpanContent"></pre>
+</body>
+
 </html>

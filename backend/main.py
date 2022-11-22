@@ -147,7 +147,7 @@ def uniform_cost():
         
         if curr in destination:
             print("found!")
-            fringe.append(priority_queue.copy())    
+            #fringe.append(priority_queue.copy())    
             new_destination = curr
             old_destination = curr
             visited.add(curr)
@@ -160,7 +160,7 @@ def uniform_cost():
             shortest_path.append(old_destination)
             print("shorest path",shortest_path)
             #print("visited", visited)
-            #print("fringe", fringe)
+            print("fringe", fringe)
             return shortest_path, fringe, visitedList
         
         for n,c in graph[curr]:

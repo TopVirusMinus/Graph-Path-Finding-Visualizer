@@ -18,7 +18,7 @@ nodes.forEach((node) => {
     label: `${node.label} (${node.title})`,
   });
 });
-
+var shortestpath, visited, fringe
 // create an array with edges
 var edges = new vis.DataSet([
   { from: 1, to: 2, label: "5" },
@@ -41,7 +41,7 @@ var edges = new vis.DataSet([
 
 let clear = document
   .getElementById("clear")
-  .addEventListener("click", () => {});
+  .addEventListener("click", () => { });
 
 var selectedNode = 0;
 var prevSelectedNode = 0;
@@ -125,7 +125,13 @@ var options = {
     },
   },
 };
-
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
 document.getElementById("visualize").addEventListener("click", async () => {
   console.log("Source type = ", typeof source);
   console.log("source", source, "destination", destination);
@@ -144,7 +150,14 @@ document.getElementById("visualize").addEventListener("click", async () => {
     .then(async () => {
       let path = await axios.get("http://localhost:8000/computePath/");
       console.log(path.data);
-      [shortestPath, fringe, visitedList] = path.data;
+      [shortestpath, fringe, visited] = path.data
+      console.log("hello")
+      for (var i = 0; i < fringe.length; i++) {
+        document.getElementById("fringe").innerHTML += fringe[i] + "<br>"
+      }
+      document.getElementById("fringeh1").innerHTML = "Fringe:"
+
+
     })
     .catch((err) => console.log(err));
 });
@@ -307,7 +320,7 @@ network.on("zoom", function (params) {
 //         4
 //     );
 // });
-
+var time = 0
 instructions = {
   Delete: () => network.deleteSelected(),
   Enter: () => {
@@ -431,6 +444,96 @@ instructions = {
       color: { background: "#00ff00" },
       font: { color: "#333" },
     });
+  },
+  ArrowRight: () => {
+    var vl = visited.length;
+    nodes.forEach((n) => {
+
+      nodes.updateOnly({
+        id: n.id,
+        color: { background: "#97c2fc" },
+        font: { color: "#333" },
+      });
+
+    });
+    if (time > 0 && time <= visited.length) {
+      for (var i = 0; i < time; i++) {
+        nodes.updateOnly({
+          id: visited[i],
+          color: { background: "#fbcf23" },
+          font: { color: "#333" },
+        });
+      }
+    }
+    else {
+      if (time >= vl && time - visited.length < shortestpath.length) {
+        for (var i = 0; i <= time - visited.length; i++) {
+          nodes.updateOnly({
+            id: shortestpath[i],
+            color: { background: "#EE432F" },
+            font: { color: "#333" },
+          });
+        }
+      }
+    }
+    if (time < visited.length + shortestpath.length)
+      time++;
+  },
+  p: () => {
+
+    nodes.forEach((n) => {
+
+      nodes.updateOnly({
+        id: n.id,
+        color: { background: "#97c2fc" },
+        font: { color: "#333" },
+      });
+
+    });
+    for (var i = 0; i < shortestpath.length; i++) {
+      nodes.updateOnly({
+        id: shortestpath[i],
+        color: { background: "#EE432F" },
+        font: { color: "#333" },
+      });
+    }
+
+  },
+  ArrowLeft: () => {
+    if (time > 0) {
+      time--;
+    }
+    var vl = visited.length;
+    nodes.forEach((n) => {
+
+      nodes.updateOnly({
+        id: n.id,
+        color: { background: "#97c2fc" },
+        font: { color: "#333" },
+      });
+
+    });
+    if (time > 0 && time < visited.length) {
+      for (var i = 0; i < time; i++) {
+        nodes.updateOnly({
+          id: visited[i],
+          color: { background: "#fbcf23" },
+          font: { color: "#333" },
+        });
+      }
+    }
+    else {
+      if (time >= vl && time - visited.length < shortestpath.length) {
+        for (var i = 0; i <= time - visited.length; i++) {
+          nodes.updateOnly({
+            id: shortestpath[i],
+            color: { background: "#EE432F" },
+            font: { color: "#333" },
+          });
+        }
+      }
+    }
+
   },
   g: () => {
     //console.log(destination);

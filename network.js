@@ -41,7 +41,7 @@ var edges = new vis.DataSet([
 
 let clear = document
   .getElementById("clear")
-  .addEventListener("click", () => {});
+  .addEventListener("click", () => { });
 
 var selectedNode = 0;
 var prevSelectedNode = 0;

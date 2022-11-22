@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -58,6 +58,7 @@ def bfs():
                 backtrack[c] = curr
 
             if c in destination:
+                fringe.append(queue.copy())
                 destination = c
                 old_destination = c
                 visited.add(c)
@@ -105,6 +106,7 @@ def uniform_cost():
 
         if curr in destination:
             print("found!")
+            fringe.append(priority_queue.copy())
             new_destination = curr
             old_destination = curr
             visited.add(curr)
@@ -159,6 +161,7 @@ def a_star():
         visited.add(node)
         visitedList.append(node)
         if node in destination:
+            fringe.append(queue.copy())
             new_destination = node
             # print(backtrack)
             while backtrack[new_destination] != source:
@@ -198,7 +201,7 @@ class BaseParam(BaseModel):
     nodes: List[dict]
     edges: List[dict]
     algorithm: str
-    source: int
+    source: Union[int, str]
     destination: list
 
 
